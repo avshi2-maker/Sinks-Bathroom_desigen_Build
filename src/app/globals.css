@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-charcoal: #0F0F0F;
+  --color-charcoal-soft: #1a1612;
+  --color-cream: #F5F1EA;
+  --color-cream-darker: #E8E0D2;
+  --color-brass: #B89968;
+  --color-brass-dark: #8A6F44;
+
+  --font-sans: var(--font-heebo), system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+}
+
+/* Smooth fade-in animation for hero content */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.9s ease-out forwards;
+}
+
+/* Selection style */
+::selection {
+  background: var(--color-brass);
+  color: var(--color-charcoal);
+}
