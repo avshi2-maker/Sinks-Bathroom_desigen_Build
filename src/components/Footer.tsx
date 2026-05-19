@@ -18,7 +18,8 @@ export function Footer() {
         </div>
         <p className="text-sm mb-8">כיורי שיש איטלקי בעבודת יד</p>
 
-        <div className="flex justify-center gap-8 text-sm mb-10">
+        {/* Contact options */}
+        <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm mb-10">
           {whatsapp && (
             <a
               href={`https://wa.me/${whatsapp}`}
@@ -29,6 +30,20 @@ export function Footer() {
               וואטסאפ
             </a>
           )}
+          <a
+            href="mailto:avshi@marble-art.co.il"
+            className="hover:text-[var(--color-brass)] transition-colors"
+            dir="ltr"
+          >
+            avshi@marble-art.co.il
+          </a>
+          <a
+            href="mailto:ales@marble-art.co.il"
+            className="hover:text-[var(--color-brass)] transition-colors"
+            dir="ltr"
+          >
+            ales@marble-art.co.il
+          </a>
           <a
             href="#lead-form"
             className="hover:text-[var(--color-brass)] transition-colors"
