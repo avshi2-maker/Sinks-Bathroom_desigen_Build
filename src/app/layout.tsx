@@ -14,17 +14,16 @@ const SITE_URL = "https://www.marble-art.co.il";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
-  // Title — appears in browser tab + Google results
+  // Title — 54 chars, optimal range 50-60
   title: {
-    default: "Marble Art — כיורי שיש איטלקי בעבודת יד | מרבל ארט",
+    default: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד | מרבל ארט",
     template: "%s | Marble Art Sinks",
   },
 
-  // Description — appears under title in Google results
+  // Description — 137 chars, optimal range 110-160
   description:
-    "כיורי שיש איטלקי בעבודת יד מאלס. שיש מובחר מאיטליה ומדגסקר, גימור ידני, ותצוגה מקדימה בבינה מלאכותית לפני שחותכים אבן. כיורים ייחודיים לחדרי אמבטיה יוקרתיים.",
+    "כיורי שיש איטלקי בעבודת יד מאלס. שיש Calacatta, Statuario ומדגסקר. גימור ידני, תצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
 
-  // Keywords (Hebrew + English) — used by some search engines, social platforms
   keywords: [
     "כיורי שיש",
     "כיור שיש איטלקי",
@@ -43,12 +42,10 @@ export const metadata: Metadata = {
     "luxury bathroom Israel",
   ],
 
-  // Author / publisher metadata
   authors: [{ name: "Marble Art Sinks", url: SITE_URL }],
   creator: "Marble Art Sinks",
   publisher: "Marble Art Sinks",
 
-  // Robot directives (allow indexing)
   robots: {
     index: true,
     follow: true,
@@ -60,49 +57,46 @@ export const metadata: Metadata = {
     },
   },
 
-  // Open Graph — controls WhatsApp / Facebook / LinkedIn link previews
+  // Open Graph — WhatsApp / Facebook / LinkedIn previews
   openGraph: {
     type: "website",
     locale: "he_IL",
     url: SITE_URL,
     siteName: "Marble Art Sinks",
-    title: "Marble Art — כיורי שיש איטלקי בעבודת יד",
+    title: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד | מרבל ארט",
     description:
-      "כיורי שיש איטלקי בעבודת יד. שיש מובחר, גימור ידני, תצוגה מקדימה בבינה מלאכותית.",
+      "כיורי שיש איטלקי בעבודת יד מאלס. שיש Calacatta, Statuario ומדגסקר. גימור ידני, תצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
     images: [
       {
-        url: "/hero-render.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "כיור שיש אומנותי מאבן מדגסקר",
+        type: "image/jpeg",
       },
     ],
   },
 
-  // Twitter card (same image, used on Twitter/X link previews)
   twitter: {
     card: "summary_large_image",
-    title: "Marble Art — כיורי שיש איטלקי בעבודת יד",
-    description: "כיורי שיש איטלקי בעבודת יד. תצוגה מקדימה ב-AI לפני בנייה.",
-    images: ["/hero-render.jpg"],
+    title: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד",
+    description:
+      "כיורי שיש איטלקי בעבודת יד מאלס. תצוגה מקדימה ב-AI לפני שחותכים את האבן.",
+    images: ["/og-image.jpg"],
   },
 
-  // Canonical URL — tells Google "the official version is this"
   alternates: {
     canonical: SITE_URL,
   },
 
-  // Application metadata
   applicationName: "Marble Art Sinks",
   category: "Home & Garden / Bathroom Design",
 
-  // Apple/iOS specific
   appleWebApp: {
     title: "Marble Art",
     statusBarStyle: "default",
   },
 
-  // Verification (placeholders — fill in when you set up Google Search Console)
   verification: {
     // google: "REPLACE_WITH_VERIFICATION_CODE",
   },
@@ -113,15 +107,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // JSON-LD structured data for LocalBusiness — helps Google understand the business
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Marble Art Sinks",
     alternateName: "מרבל ארט",
-    description: "כיורי שיש איטלקי בעבודת יד. שיש מובחר וגימור אומנותי.",
+    description:
+      "כיורי שיש איטלקי בעבודת יד. שיש Calacatta, Statuario ומדגסקר. גימור ידני אומנותי.",
     url: SITE_URL,
-    image: `${SITE_URL}/hero-render.jpg`,
+    image: `${SITE_URL}/og-image.jpg`,
     priceRange: "₪₪₪",
     address: {
       "@type": "PostalAddress",
@@ -132,9 +126,7 @@ export default function RootLayout({
       "@type": "Country",
       name: "Israel",
     },
-    sameAs: [
-      // Add Facebook / Instagram URLs here when ready
-    ],
+    sameAs: [],
   };
 
   return (
