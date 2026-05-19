@@ -14,31 +14,51 @@ const SITE_URL = "https://www.marble-art.co.il";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
-  // Title — 54 chars, optimal range 50-60
+  // Title — 54 chars
   title: {
     default: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד | מרבל ארט",
     template: "%s | Marble Art Sinks",
   },
 
-  // Description — 137 chars, optimal range 110-160
+  // Description — 137 chars
   description:
     "כיורי שיש איטלקי בעבודת יד מאלס. שיש Calacatta, Statuario ומדגסקר. גימור ידני, תצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
 
+  // 28 keywords — Hebrew + English, broad coverage
   keywords: [
+    // === Hebrew - Core product ===
     "כיורי שיש",
     "כיור שיש איטלקי",
     "כיור שיש בעבודת יד",
     "כיור אמבטיה יוקרתי",
-    "Calacatta",
-    "Statuario",
     "שיש מדגסקר",
     "כיור אומנותי",
     "כיור שיש מותאם אישית",
     "אומן שיש",
+    // === Hebrew - Service/project type ===
+    "עיצוב כיורים משיש",
+    "שיפוץ מקלחות ושרותים עם שיש",
+    "שיפוץ אמבטיה יוקרתי",
+    "אמבטיה לוילה",
+    // === Hebrew - Customer language ===
+    "כיור שיש לבן",
+    "כיור שיש שחור",
+    "כיור שיש עם זהב",
+    "אגן רחצה שיש",
+    // === English - Stone types ===
+    "Calacatta",
+    "Statuario",
+    "Italian marble",
+    // === English - Product ===
     "marble sink",
     "italian marble bathroom",
     "custom marble sink Israel",
     "artisan stone sink",
+    "artistic handmade marble sink",
+    "white marble sink",
+    // === English - Service ===
+    "custom design and build",
+    "marble bathroom renovation",
     "luxury bathroom Israel",
   ],
 
@@ -57,7 +77,6 @@ export const metadata: Metadata = {
     },
   },
 
-  // Open Graph — WhatsApp / Facebook / LinkedIn previews
   openGraph: {
     type: "website",
     locale: "he_IL",
@@ -107,13 +126,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Updated structured data with services array
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Marble Art Sinks",
     alternateName: "מרבל ארט",
     description:
-      "כיורי שיש איטלקי בעבודת יד. שיש Calacatta, Statuario ומדגסקר. גימור ידני אומנותי.",
+      "כיורי שיש איטלקי בעבודת יד. שיש Calacatta, Statuario ומדגסקר. גימור ידני אומנותי. שיפוץ מקלחות ואמבטיות מותאם אישית.",
     url: SITE_URL,
     image: `${SITE_URL}/og-image.jpg`,
     priceRange: "₪₪₪",
@@ -126,6 +146,27 @@ export default function RootLayout({
       "@type": "Country",
       name: "Israel",
     },
+    // Services offered — helps Google show business in service searches
+    makesOffer: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Artistic handmade marble sinks",
+          description:
+            "Custom-designed marble sinks crafted from Italian Calacatta, Statuario, and Madagascar agate.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Luxury bathroom renovation",
+          description:
+            "Complete bathroom renovations featuring artisan marble work.",
+        },
+      },
+    ],
     sameAs: [],
   };
 
