@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import { Heebo } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 const heebo = Heebo({
@@ -10,21 +11,16 @@ const heebo = Heebo({
 });
 
 const SITE_URL = "https://www.marble-art.co.il";
+const GA_MEASUREMENT_ID = "G-0VV9NZFRXP";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-
-  // Title - 54 chars
   title: {
     default: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד | מרבל ארט",
     template: "%s | Marble Art Sinks",
   },
-
-  // Description - 137 chars
   description:
     "כיורי שיש איטלקי בעבודת יד מאלס. שיש Calacatta, Statuario ומדגסקר. גימור ידני, תצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
-
-  // 28 keywords - Hebrew + English, broad coverage
   keywords: [
     "כיורי שיש",
     "כיור שיש איטלקי",
@@ -55,11 +51,9 @@ export const metadata: Metadata = {
     "marble bathroom renovation",
     "luxury bathroom Israel",
   ],
-
   authors: [{ name: "Marble Art Sinks", url: SITE_URL }],
   creator: "Marble Art Sinks",
   publisher: "Marble Art Sinks",
-
   robots: {
     index: true,
     follow: true,
@@ -70,7 +64,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-
   openGraph: {
     type: "website",
     locale: "he_IL",
@@ -89,7 +82,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-
   twitter: {
     card: "summary_large_image",
     title: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד",
@@ -97,19 +89,15 @@ export const metadata: Metadata = {
       "כיורי שיש איטלקי בעבודת יד מאלס. תצוגה מקדימה ב-AI לפני שחותכים את האבן.",
     images: ["/og-image.jpg"],
   },
-
   alternates: {
     canonical: SITE_URL,
   },
-
   applicationName: "Marble Art Sinks",
   category: "Home & Garden / Bathroom Design",
-
   appleWebApp: {
     title: "Marble Art",
     statusBarStyle: "default",
   },
-
   verification: {
     google: "8-TZvWs28rHhJlFYOEK2H7sWuR5m7Ht1oQ9xy8-G83Q",
   },
@@ -171,6 +159,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">{children}</body>
+      <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
     </html>
   );
 }
