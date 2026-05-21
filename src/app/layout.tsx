@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Heebo } from "next/font/google";
 import "./globals.css";
 
@@ -14,19 +14,18 @@ const SITE_URL = "https://www.marble-art.co.il";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
-  // Title — 54 chars
+  // Title - 54 chars
   title: {
     default: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד | מרבל ארט",
     template: "%s | Marble Art Sinks",
   },
 
-  // Description — 137 chars
+  // Description - 137 chars
   description:
     "כיורי שיש איטלקי בעבודת יד מאלס. שיש Calacatta, Statuario ומדגסקר. גימור ידני, תצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
 
-  // 28 keywords — Hebrew + English, broad coverage
+  // 28 keywords - Hebrew + English, broad coverage
   keywords: [
-    // === Hebrew - Core product ===
     "כיורי שיש",
     "כיור שיש איטלקי",
     "כיור שיש בעבודת יד",
@@ -35,28 +34,23 @@ export const metadata: Metadata = {
     "כיור אומנותי",
     "כיור שיש מותאם אישית",
     "אומן שיש",
-    // === Hebrew - Service/project type ===
     "עיצוב כיורים משיש",
     "שיפוץ מקלחות ושרותים עם שיש",
     "שיפוץ אמבטיה יוקרתי",
     "אמבטיה לוילה",
-    // === Hebrew - Customer language ===
     "כיור שיש לבן",
     "כיור שיש שחור",
     "כיור שיש עם זהב",
     "אגן רחצה שיש",
-    // === English - Stone types ===
     "Calacatta",
     "Statuario",
     "Italian marble",
-    // === English - Product ===
     "marble sink",
     "italian marble bathroom",
     "custom marble sink Israel",
     "artisan stone sink",
     "artistic handmade marble sink",
     "white marble sink",
-    // === English - Service ===
     "custom design and build",
     "marble bathroom renovation",
     "luxury bathroom Israel",
@@ -117,7 +111,7 @@ export const metadata: Metadata = {
   },
 
   verification: {
-    // google: "REPLACE_WITH_VERIFICATION_CODE",
+    google: "8-TZvWs28rHhJlFYOEK2H7sWuR5m7Ht1oQ9xy8-G83Q",
   },
 };
 
@@ -126,7 +120,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Updated structured data with services array
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -146,7 +139,6 @@ export default function RootLayout({
       "@type": "Country",
       name: "Israel",
     },
-    // Services offered — helps Google show business in service searches
     makesOffer: [
       {
         "@type": "Offer",
