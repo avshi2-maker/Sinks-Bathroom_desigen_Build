@@ -14,6 +14,12 @@ export default function Home() {
         <Hero />
         <WhyUs />
         <HowItWorks />
+
+        {/*
+         * Gallery component renders 4 sections internally:
+         * 1. Sinks (real photos) 2. Samples (Trabelsi marble)
+         * 3. Concepts (AI previews) 4. Sketches (Ales's drawings)
+         */}
         <Gallery />
 
         <section

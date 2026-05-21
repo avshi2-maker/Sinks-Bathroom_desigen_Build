@@ -1,80 +1,203 @@
-import { supabase } from "@/lib/supabase";
+import { fetchGalleryFolder, filenameToDisplay } from "@/lib/cloudinaryGallery";
+import type { GalleryImage } from "@/lib/cloudinaryGallery";
 
-type MediaItem = {
-  id: string;
-  cloudinary_url: string;
-  caption_he: string | null;
-  subject_type: string;
-  marble_family: string | null;
-};
-
+/**
+ * Marble Art Gallery — renders 4 themed sections.
+ *
+ * - Sinks (REAL finished work by Ales) — hero
+ * - Samples (Trabelsi marble swatches) — material library
+ * - Concepts (AI previews, clearly labeled) — honest framing
+ * - Sketches (Ales's hand drawings) — process storytelling
+ *
+ * Empty sections render an empty-state OR get hidden entirely (controlled
+ * via emptyState string — empty string = hide section if no items).
+ */
 export async function Gallery() {
-  const { data, error } = await supabase
-    .from("sink_media")
-    .select("id, cloudinary_url, caption_he, subject_type, marble_family")
-    .eq("is_published", true)
-    .in("quality_tier", ["hero", "supporting"])
-    .eq("is_archived", false)
-    .order("quality_tier", { ascending: true })
-    .order("created_at", { ascending: false })
-    .limit(9);
-
-  const items = (data as MediaItem[] | null) || [];
+  // Fetch all 4 folders in parallel
+  const [sinks, samples, concepts, sketches] = await Promise.all([
+    fetchGalleryFolder("marble-art/sinks", 12),
+    fetchGalleryFolder("marble-art/samples", 16),
+    fetchGalleryFolder("marble-art/concepts", 12),
+    fetchGalleryFolder("marble-art/sketches", 8),
+  ]);
 
   return (
-    <section className="py-20 md:py-32 bg-[var(--color-cream)]">
+    <>
+      {/* ── SECTION 1: REAL SINKS (hero gallery) ── */}
+      <GallerySection
+        id="sinks-gallery"
+        eyebrow="העבודה שלנו"
+        title="כיורים שבנינו"
+        subtitle="כל כיור הוא יצירה ייחודית. כל אחד מהם נחתך, עוצב ולוטש ידנית על ידי אלס."
+        items={sinks}
+        columns={3}
+        bgClass="bg-[var(--color-cream)]"
+        emptyState="גלריית הכיורים נפתחת בקרוב — נוסיף תמונות חדשות בכל שבוע."
+      />
+
+      {/* ── SECTION 2: MARBLE SAMPLES ── */}
+      <GallerySection
+        id="samples-gallery"
+        eyebrow="חומרי גלם"
+        title="אבני שיש לבחירה"
+        subtitle="אנחנו עובדים עם מבחר אבני שיש מובחרות. בואו לבחור את האבן שלכם — אנחנו מלווים אתכם בסלון."
+        items={samples}
+        columns={4}
+        bgClass="bg-[var(--color-cream-darker)]"
+        compactCard
+        showLabel
+        emptyState=""
+      />
+
+      {/* ── SECTION 3: AI CONCEPTS ── */}
+      <GallerySection
+        id="concepts-gallery"
+        eyebrow="הדמיות"
+        title="תצוגות מקדימות מותאמות אישית"
+        subtitle="כל לקוח מקבל 3 תצוגות מקדימות שנוצרות בעזרת בינה מלאכותית — לפני שחותכים אבן אחת."
+        items={concepts}
+        columns={3}
+        bgClass="bg-[var(--color-cream)]"
+        badge="הדמיה"
+        emptyState=""
+      />
+
+      {/* ── SECTION 4: SKETCHES ── */}
+      <GallerySection
+        id="sketches-gallery"
+        eyebrow="התהליך"
+        title="כל כיור מתחיל בסקיצה"
+        subtitle="לפני האבן, לפני ההדמיה — יש קו. רעיון על נייר. שיחה ראשונה."
+        items={sketches}
+        columns={4}
+        bgClass="bg-[var(--color-cream-darker)]"
+        compactCard
+        emptyState=""
+      />
+    </>
+  );
+}
+
+type GallerySectionProps = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  items: GalleryImage[];
+  columns: 2 | 3 | 4;
+  bgClass: string;
+  compactCard?: boolean;
+  badge?: string;
+  showLabel?: boolean;
+  emptyState: string;
+};
+
+function GallerySection({
+  id,
+  eyebrow,
+  title,
+  subtitle,
+  items,
+  columns,
+  bgClass,
+  compactCard,
+  badge,
+  showLabel,
+  emptyState,
+}: GallerySectionProps) {
+  // Hide section completely if empty AND no custom empty state
+  if (items.length === 0 && !emptyState) {
+    return null;
+  }
+
+  const gridCols = {
+    2: "grid-cols-1 md:grid-cols-2",
+    3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+    4: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+  }[columns];
+
+  return (
+    <section id={id} className={`py-20 md:py-28 ${bgClass}`}>
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16 md:mb-20">
+        <div className="text-center mb-12 md:mb-16">
           <p className="text-[var(--color-brass-dark)] text-xs font-medium tracking-[0.3em] uppercase mb-4">
-            גלריה
+            {eyebrow}
           </p>
           <h2 className="text-[var(--color-charcoal)] text-3xl md:text-5xl font-black mb-4 leading-tight">
-            יצירות נבחרות
+            {title}
           </h2>
-          <p className="text-[var(--color-charcoal)]/60 max-w-2xl mx-auto">
-            כל אחד מהכיורים הוא יצירה ייחודית בעבודת יד מאבן נבחרת.
+          <p className="text-[var(--color-charcoal)]/60 max-w-2xl mx-auto leading-relaxed">
+            {subtitle}
           </p>
         </div>
 
-        {error ? (
-          <div className="text-center py-16">
-            <p className="text-[var(--color-charcoal)]/50 text-sm">
-              שגיאה זמנית בטעינת הגלריה. אנא רעננו את העמוד.
-            </p>
-          </div>
-        ) : items.length === 0 ? (
-          <div className="text-center py-16 max-w-2xl mx-auto">
-            <div className="inline-block w-20 h-20 border-2 border-[var(--color-brass)]/30 rounded-full mb-8" />
-            <h3 className="text-[var(--color-charcoal)] text-xl font-bold mb-3">
-              הגלריה נפתחת בקרוב
-            </h3>
+        {items.length === 0 ? (
+          <div className="text-center py-12 max-w-xl mx-auto">
+            <div className="inline-block w-16 h-16 border-2 border-[var(--color-brass)]/30 rounded-full mb-6" />
             <p className="text-[var(--color-charcoal)]/60 text-base leading-relaxed">
-              אנחנו מצלמים את היצירות החדשות. בינתיים מלאו את הטופס למטה
-              ונשלח לכם תצוגות מקדימות מותאמות לטעם ולתקציב שלכם.
+              {emptyState}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className={`grid ${gridCols} gap-4 md:gap-6`}>
             {items.map((item) => (
-              <a
-                key={item.id}
-                href={item.cloudinary_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="aspect-square overflow-hidden rounded-lg group cursor-pointer block bg-[var(--color-cream-darker)]"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.cloudinary_url}
-                  alt={item.caption_he || "Marble Art sink"}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              </a>
+              <GalleryCard
+                key={item.public_id}
+                item={item}
+                compact={compactCard}
+                badge={badge}
+                showLabel={showLabel}
+              />
             ))}
           </div>
         )}
       </div>
     </section>
+  );
+}
+
+type GalleryCardProps = {
+  item: GalleryImage;
+  compact?: boolean;
+  badge?: string;
+  showLabel?: boolean;
+};
+
+function GalleryCard({ item, compact, badge, showLabel }: GalleryCardProps) {
+  const displayName = filenameToDisplay(item.filename);
+
+  return (
+    <a
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`
+        relative block overflow-hidden rounded-lg group cursor-pointer
+        bg-[var(--color-charcoal)]/5
+        ${compact ? "aspect-[3/4]" : "aspect-square"}
+      `}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={item.thumbnail_url}
+        alt={displayName || "Marble Art"}
+        loading="lazy"
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+      />
+
+      {badge && (
+        <span className="absolute top-3 right-3 bg-[var(--color-charcoal)]/80 text-[var(--color-cream)] text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm tracking-wider uppercase">
+          {badge}
+        </span>
+      )}
+
+      {showLabel && displayName && (
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[var(--color-charcoal)]/90 to-transparent p-4 pt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <p className="text-[var(--color-cream)] text-sm font-medium text-center">
+            {displayName}
+          </p>
+        </div>
+      )}
+    </a>
   );
 }
