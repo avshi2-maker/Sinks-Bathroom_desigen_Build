@@ -1,7 +1,8 @@
-export function Footer() {
-  const whatsapp = (
-    process.env.NEXT_PUBLIC_BUSINESS_WHATSAPP || ""
-  ).replace(/\D/g, "");
+﻿export function Footer() {
+  // Pre-filled WhatsApp message - encoded for URL
+  const waMessage = encodeURIComponent(
+    "שלום, ראיתי את האתר של מרבל ארט ומעוניין/ת בכיור שיש."
+  );
 
   return (
     <footer className="bg-[var(--color-charcoal)] text-[var(--color-cream)]/70 py-14">
@@ -18,33 +19,25 @@ export function Footer() {
         </div>
         <p className="text-sm mb-8">כיורי שיש איטלקי בעבודת יד</p>
 
-        {/* Contact options */}
+        {/* Contact options - WhatsApp direct to each owner */}
         <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm mb-10">
-          {whatsapp && (
-            <a
-              href={`https://wa.me/${whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--color-brass)] transition-colors"
-            >
-              וואטסאפ
-            </a>
-          )}
-          <a
-            href="mailto:avshi@marble-art.co.il"
+          
+            href={`https://wa.me/972505231042?text=${waMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="hover:text-[var(--color-brass)] transition-colors"
-            dir="ltr"
           >
-            avshi@marble-art.co.il
+            וואטסאפ - אבשי 050-5231042
           </a>
-          <a
-            href="mailto:ales@marble-art.co.il"
+          
+            href={`https://wa.me/972504029723?text=${waMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="hover:text-[var(--color-brass)] transition-colors"
-            dir="ltr"
           >
-            ales@marble-art.co.il
+            וואטסאפ - אלס 050-4029723
           </a>
-          <a
+          
             href="#lead-form"
             className="hover:text-[var(--color-brass)] transition-colors"
           >
