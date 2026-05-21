@@ -1,11 +1,11 @@
-import { fetchGalleryFolder, filenameToDisplay } from "@/lib/cloudinaryGallery";
+﻿import { fetchGalleryFolder, filenameToDisplay } from "@/lib/cloudinaryGallery";
 import type { GalleryImage } from "@/lib/cloudinaryGallery";
 
 /**
  * Marble Art Gallery — renders 4 themed sections.
  *
  * - Sinks (REAL finished work by Ales) — hero
- * - Samples (Trabelsi marble swatches) — material library
+ * - Samples (AI-generated marble simulations, clearly labeled "הדמיה") — material library
  * - Concepts (AI previews, clearly labeled) — honest framing
  * - Sketches (Ales's hand drawings) — process storytelling
  *
@@ -35,17 +35,18 @@ export async function Gallery() {
         emptyState="גלריית הכיורים נפתחת בקרוב — נוסיף תמונות חדשות בכל שבוע."
       />
 
-      {/* ── SECTION 2: MARBLE SAMPLES ── */}
+      {/* ── SECTION 2: MARBLE SAMPLES (AI simulations - honest labeling) ── */}
       <GallerySection
         id="samples-gallery"
         eyebrow="חומרי גלם"
         title="אבני שיש לבחירה"
-        subtitle="אנחנו עובדים עם מבחר אבני שיש מובחרות. בואו לבחור את האבן שלכם — אנחנו מלווים אתכם בסלון."
+        subtitle="התמונות הן הדמיות בלבד. לאחר שתבחרו את אבן השיש המועדפת עליכם — נפנה אתכם ישירות לסלון תצוגה של ספק אבני שיש מקצועי לרכישה."
         items={samples}
         columns={4}
         bgClass="bg-[var(--color-cream-darker)]"
         compactCard
         showLabel
+        badge="הדמיה"
         emptyState=""
       />
 
@@ -167,35 +168,15 @@ function GalleryCard({ item, compact, badge, showLabel }: GalleryCardProps) {
   const displayName = filenameToDisplay(item.filename);
 
   return (
-    <a
-      href={item.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`
-        relative block overflow-hidden rounded-lg group cursor-pointer
-        bg-[var(--color-charcoal)]/5
-        ${compact ? "aspect-[3/4]" : "aspect-square"}
-      `}
-    >
+    <a href={item.url} target="_blank" rel="noopener noreferrer" className={`relative block overflow-hidden rounded-lg group cursor-pointer bg-[var(--color-charcoal)]/5 ${compact ? "aspect-[3/4]" : "aspect-square"}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={item.thumbnail_url}
-        alt={displayName || "Marble Art"}
-        loading="lazy"
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-      />
-
+      <img src={item.thumbnail_url} alt={displayName || "Marble Art"} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
       {badge && (
-        <span className="absolute top-3 right-3 bg-[var(--color-charcoal)]/80 text-[var(--color-cream)] text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm tracking-wider uppercase">
-          {badge}
-        </span>
+        <span className="absolute top-3 right-3 bg-[var(--color-charcoal)]/80 text-[var(--color-cream)] text-[10px] font-medium px-2.5 py-1 rounded-full backdrop-blur-sm tracking-wider uppercase">{badge}</span>
       )}
-
       {showLabel && displayName && (
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[var(--color-charcoal)]/90 to-transparent p-4 pt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <p className="text-[var(--color-cream)] text-sm font-medium text-center">
-            {displayName}
-          </p>
+          <p className="text-[var(--color-cream)] text-sm font-medium text-center">{displayName}</p>
         </div>
       )}
     </a>
