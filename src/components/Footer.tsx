@@ -1,4 +1,13 @@
-﻿const WA_MESSAGE = "שלום, ראיתי את האתר של מרבל ארט ומעוניין/ת בכיור שיש.";
+﻿"use client";
+
+const WA_MESSAGE = "שלום, ראיתי את האתר של מרבל ארט ומעוניין/ת בכיור שיש.";
+
+// Type-safe gtag wrapper (only fires in browser, only if gtag exists)
+function trackEvent(eventName: string, params: Record<string, string | number>) {
+  if (typeof window !== "undefined" && typeof (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag === "function") {
+    (window as unknown as { gtag: (...args: unknown[]) => void }).gtag("event", eventName, params);
+  }
+}
 
 export function Footer() {
   const waText = encodeURIComponent(WA_MESSAGE);
@@ -17,13 +26,29 @@ export function Footer() {
         <p className="text-sm mb-8">כיורי שיש איטלקי בעבודת יד</p>
 
         <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm mb-10">
-          <a href={avshiHref} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brass)] transition-colors">
+          
+            href={avshiHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("whatsapp_click", { contact: "avshi", location: "footer", phone: "972505231042" })}
+            className="hover:text-[var(--color-brass)] transition-colors"
+          >
             וואטסאפ - אבשי 050-5231042
           </a>
-          <a href={alesHref} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-brass)] transition-colors">
+          
+            href={alesHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("whatsapp_click", { contact: "ales", location: "footer", phone: "972504029723" })}
+            className="hover:text-[var(--color-brass)] transition-colors"
+          >
             וואטסאפ - אלס 050-4029723
           </a>
-          <a href="#lead-form" className="hover:text-[var(--color-brass)] transition-colors">
+          
+            href="#lead-form"
+            onClick={() => trackEvent("lead_form_click", { location: "footer" })}
+            className="hover:text-[var(--color-brass)] transition-colors"
+          >
             מלאו טופס
           </a>
         </div>
