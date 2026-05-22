@@ -20,11 +20,41 @@ const PROJECT_TYPES = [
 
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dqdku88vv";
 const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_LEAD_PRESET || "marble_lead_uploads";
+const BUSINESS_WHATSAPP = "972505231042";
 const MAX_FILES = 5;
 const MAX_SIZE_MB = 10;
 const ACCEPTED = ".jpg,.jpeg,.png,.webp,.mp4,.mov,.pdf";
 
 type UploadedFile = { name: string; url: string; type: string };
+type SubmittedLead = { full_name: string; phone: string; city_he: string; project_type: string; budget_tier: string; notes_he: string; files: UploadedFile[] };
+
+function trackEvent(eventName: string, params: Record<string, string | number>) {
+  if (typeof window !== "undefined") {
+    const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+    if (typeof w.gtag === "function") { w.gtag("event", eventName, params); }
+  }
+}
+
+function buildWhatsAppMessage(lead: SubmittedLead): string {
+  const projectLabel = PROJECT_TYPES.find((p) => p.value === lead.project_type)?.label || "—";
+  const budgetLabel = BUDGET_TIERS.find((b) => b.value === lead.budget_tier)?.label || "—";
+  const lines = [
+    "שלום, מילאתי טופס באתר מרבל ארט:",
+    "",
+    `שם: ${lead.full_name}`,
+    `טלפון: ${lead.phone}`,
+    lead.city_he ? `עיר: ${lead.city_he}` : "",
+    `סוג פרויקט: ${projectLabel}`,
+    `תקציב: ${budgetLabel}`,
+    lead.notes_he ? `הערות: ${lead.notes_he}` : "",
+  ];
+  if (lead.files.length > 0) {
+    lines.push("");
+    lines.push("קבצים מצורפים:");
+    lead.files.forEach((f, i) => { lines.push(`${i + 1}. ${f.url}`); });
+  }
+  return lines.filter((l) => l !== "").join("\n");
+}
 
 export function LeadForm() {
   const [pending, setPending] = useState(false);
@@ -33,20 +63,18 @@ export function LeadForm() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState<SubmittedLead | null>(null);
 
   async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const selected = e.target.files;
     if (!selected || selected.length === 0) return;
     setUploadError(null);
-
     if (files.length + selected.length > MAX_FILES) {
       setUploadError(`ניתן להעלות עד ${MAX_FILES} קבצים.`);
       return;
     }
-
     setUploading(true);
     const newFiles: UploadedFile[] = [];
-
     for (const file of Array.from(selected)) {
       if (file.size > MAX_SIZE_MB * 1024 * 1024) {
         setUploadError(`הקובץ "${file.name}" גדול מדי (מקסימום ${MAX_SIZE_MB} מגה).`);
@@ -59,19 +87,13 @@ export function LeadForm() {
         const isImage = file.type.startsWith("image/");
         const endpoint = isImage ? "image" : (file.type.startsWith("video/") ? "video" : "auto");
         const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${endpoint}/upload`, { method: "POST", body: fd });
-        if (!res.ok) {
-          setUploadError(`שגיאה בהעלאת "${file.name}". נסו שוב.`);
-          continue;
-        }
+        if (!res.ok) { setUploadError(`שגיאה בהעלאת "${file.name}". נסו שוב.`); continue; }
         const data = await res.json();
-        if (data.secure_url) {
-          newFiles.push({ name: file.name, url: data.secure_url, type: file.type });
-        }
+        if (data.secure_url) { newFiles.push({ name: file.name, url: data.secure_url, type: file.type }); }
       } catch {
         setUploadError(`שגיאה בהעלאת "${file.name}". נסו שוב.`);
       }
     }
-
     setFiles((prev) => [...prev, ...newFiles]);
     setUploading(false);
     e.target.value = "";
@@ -97,20 +119,34 @@ export function LeadForm() {
     const result = await submitLead(formData);
     setPending(false);
     if (result.success) {
+      setSubmitted({
+        full_name: (formData.get("full_name") as string) || "",
+        phone: phoneCheck.normalized,
+        city_he: ((formData.get("city_he") as string) || "").trim(),
+        project_type: (formData.get("project_type") as string) || "",
+        budget_tier: (formData.get("budget_tier") as string) || "",
+        notes_he: ((formData.get("notes_he") as string) || "").trim(),
+        files,
+      });
       setDone(true);
     } else {
       setError(result.error);
     }
   }
 
-  if (done) {
+  if (done && submitted) {
+    const waMessage = encodeURIComponent(buildWhatsAppMessage(submitted));
+    const waHref = `https://wa.me/${BUSINESS_WHATSAPP}?text=${waMessage}`;
+    const onWaClick = () => trackEvent("whatsapp_lead_sent", { location: "thank_you", files: submitted.files.length });
     return (
       <div className="bg-[var(--color-cream)] border-2 border-[var(--color-brass)] rounded-2xl p-10 md:p-14 text-center">
         <div className="w-16 h-16 bg-[var(--color-brass)] rounded-full mx-auto mb-6 flex items-center justify-center">
           <span className="text-[var(--color-charcoal)] text-3xl font-black">✓</span>
         </div>
         <h3 className="text-[var(--color-charcoal)] text-3xl font-black mb-4">תודה רבה!</h3>
-        <p className="text-[var(--color-charcoal)]/70 text-lg max-w-md mx-auto leading-relaxed">קיבלנו את הפרטים. אלס יחזור אליכם תוך 24-48 שעות בוואטסאפ עם 3 תצוגות מקדימות מותאמות אישית לפרויקט שלכם.</p>
+        <p className="text-[var(--color-charcoal)]/70 text-lg max-w-md mx-auto leading-relaxed mb-8">קיבלנו את הפרטים. כדי שנחזור אליכם מהר יותר — שלחו לנו את הפרטים גם בוואטסאפ בלחיצה אחת:</p>
+        <a href={waHref} target="_blank" rel="noopener noreferrer" onClick={onWaClick} className="inline-block bg-[#25D366] text-white py-4 px-8 rounded-full font-bold text-lg hover:bg-[#1da851] transition-colors duration-300">שלחו לנו את הפרטים בוואטסאפ ←</a>
+        <p className="text-[var(--color-charcoal)]/50 text-sm mt-6">או שאלס יחזור אליכם תוך 24-48 שעות.</p>
       </div>
     );
   }
