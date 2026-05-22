@@ -47,7 +47,7 @@ export async function Gallery() {
         id="concepts-gallery"
         eyebrow="הדמיות"
         title="תצוגות מקדימות מותאמות אישית"
-        subtitle="סמנו את הסגנונות שמדברים אליכם (לחצו על +) — נשלב אותם בתצוגה המקדימה שניצור עבורכם."
+        subtitle="לפני שחותכים אבן יקרה — סמנו את הסגנונות שאהבתם (לחצו על +), ונציג לכם הדמייה הכוללת את הפרטים ששלחתם בטופס."
         items={concepts}
         columns={3}
         bgClass="bg-[var(--color-cream)]"
@@ -120,3 +120,4 @@ function GallerySection({ id, eyebrow, title, subtitle, items, columns, bgClass,
     </section>
   );
 }
+

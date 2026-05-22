@@ -25,8 +25,8 @@ export default function Home() {
           <div className="max-w-3xl mx-auto px-6">
             <div className="text-center mb-12">
               <p className="text-[var(--color-brass-dark)] text-sm font-medium tracking-widest uppercase mb-3">בואו ניצור קשר</p>
-              <h2 className="text-[var(--color-charcoal)] text-3xl md:text-5xl font-black mb-4">רוצים כיור משלכם?</h2>
-              <p className="text-[var(--color-charcoal)]/60 text-lg max-w-xl mx-auto">בחרתם אבנים וסגנונות מהגלריה? מלאו פרטים ותוך 24-48 שעות תקבלו 3 תצוגות מקדימות מותאמות.</p>
+              <h2 className="text-[var(--color-charcoal)] text-3xl md:text-5xl font-black mb-4">מלאו פרטי בקשה</h2>
+              <p className="text-[var(--color-charcoal)]/60 text-lg max-w-xl mx-auto">לפני שחותכים אבן יקרה — אפשרות להציג הדמייה הכוללת את הפרטים ששלחתם בטופס. מלאו פרטים ותוך 24-48 שעות נחזור אליכם.</p>
             </div>
             <LeadForm />
           </div>
@@ -37,3 +37,4 @@ export default function Home() {
     </SelectionProvider>
   );
 }
+
