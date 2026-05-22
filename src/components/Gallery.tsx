@@ -4,8 +4,7 @@ import { GalleryCard } from "./GalleryCard";
 
 /**
  * Marble Art Gallery — renders 4 themed sections.
- * Samples + Concepts are "pickable" (customer can add to selection cart).
- * Sinks (real work) + Sketches (process) are inspiration-only, not pickable.
+ * All 4 sections are pickable (customer can add any item to selection cart).
  */
 export async function Gallery() {
   const [sinks, samples, concepts, sketches] = await Promise.all([
@@ -21,10 +20,11 @@ export async function Gallery() {
         id="sinks-gallery"
         eyebrow="העבודה שלנו"
         title="כיורים שבנינו"
-        subtitle="כל כיור הוא יצירה ייחודית. כל אחד מהם נחתך, עוצב ולוטש ידנית על ידי אלס."
+        subtitle="כל כיור הוא יצירה ייחודית. סמנו את הכיורים שמדברים אליכם (לחצו על +) ונבנה משהו דומה עבורכם."
         items={sinks}
         columns={3}
         bgClass="bg-[var(--color-cream)]"
+        pickable
         emptyState="גלריית הכיורים נפתחת בקרוב — נוסיף תמונות חדשות בכל שבוע."
       />
 
@@ -60,11 +60,12 @@ export async function Gallery() {
         id="sketches-gallery"
         eyebrow="התהליך"
         title="כל כיור מתחיל בסקיצה"
-        subtitle="לפני האבן, לפני ההדמיה — יש קו. רעיון על נייר. שיחה ראשונה."
+        subtitle="לפני האבן, לפני ההדמיה — יש קו. סמנו סקיצות שמעניינות אתכם (לחצו על +)."
         items={sketches}
         columns={4}
         bgClass="bg-[var(--color-cream-darker)]"
         compactCard
+        pickable
         emptyState=""
       />
     </>
