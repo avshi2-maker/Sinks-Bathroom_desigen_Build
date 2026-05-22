@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { submitLead } from "@/app/actions";
 import { PhoneInput, validateIsraeliPhone } from "./PhoneInput";
+import { useSelection } from "@/context/SelectionContext";
 
 const BUDGET_TIERS = [
   { value: "tier_1_8k_15k", label: "8,000 - 15,000 ₪", desc: "תקציב יעיל" },
@@ -26,7 +27,8 @@ const MAX_SIZE_MB = 10;
 const ACCEPTED = ".jpg,.jpeg,.png,.webp,.mp4,.mov,.pdf";
 
 type UploadedFile = { name: string; url: string; type: string };
-type SubmittedLead = { full_name: string; phone: string; city_he: string; project_type: string; budget_tier: string; notes_he: string; files: UploadedFile[] };
+type PickInfo = { name: string; section: string };
+type SubmittedLead = { full_name: string; phone: string; city_he: string; project_type: string; budget_tier: string; notes_he: string; files: UploadedFile[]; picks: PickInfo[] };
 
 function trackEvent(eventName: string, params: Record<string, string | number>) {
   if (typeof window !== "undefined") {
@@ -48,6 +50,11 @@ function buildWhatsAppMessage(lead: SubmittedLead): string {
     `תקציב: ${budgetLabel}`,
     lead.notes_he ? `הערות: ${lead.notes_he}` : "",
   ];
+  if (lead.picks.length > 0) {
+    lines.push("");
+    lines.push("הפריטים שבחרתי מהגלריה:");
+    lead.picks.forEach((p, i) => { lines.push(`${i + 1}. ${p.name} (${p.section})`); });
+  }
   if (lead.files.length > 0) {
     lines.push("");
     lines.push("קבצים מצורפים:");
@@ -57,6 +64,7 @@ function buildWhatsAppMessage(lead: SubmittedLead): string {
 }
 
 export function LeadForm() {
+  const { items: picks, remove: removePick, clear: clearPicks, count: pickCount } = useSelection();
   const [pending, setPending] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +123,10 @@ export function LeadForm() {
     }
     formData.set("phone", phoneCheck.normalized);
     setPending(true);
-    formData.set("inspiration_urls_json", JSON.stringify(files.map((f) => f.url)));
+    const pickNote = picks.length > 0 ? "\n\nבחירות מהגלריה: " + picks.map((p) => p.name).join(", ") : "";
+    const existingNotes = (formData.get("notes_he") as string) || "";
+    formData.set("notes_he", existingNotes + pickNote);
+    formData.set("inspiration_urls_json", JSON.stringify([...files.map((f) => f.url), ...picks.map((p) => p.thumbnailUrl)]));
     const result = await submitLead(formData);
     setPending(false);
     if (result.success) {
@@ -125,9 +136,12 @@ export function LeadForm() {
         city_he: ((formData.get("city_he") as string) || "").trim(),
         project_type: (formData.get("project_type") as string) || "",
         budget_tier: (formData.get("budget_tier") as string) || "",
-        notes_he: ((formData.get("notes_he") as string) || "").trim(),
+        notes_he: existingNotes.trim(),
         files,
+        picks: picks.map((p) => ({ name: p.name, section: p.section })),
       });
+      trackEvent("lead_submitted", { picks: picks.length, files: files.length });
+      clearPicks();
       setDone(true);
     } else {
       setError(result.error);
@@ -137,7 +151,7 @@ export function LeadForm() {
   if (done && submitted) {
     const waMessage = encodeURIComponent(buildWhatsAppMessage(submitted));
     const waHref = `https://wa.me/${BUSINESS_WHATSAPP}?text=${waMessage}`;
-    const onWaClick = () => trackEvent("whatsapp_lead_sent", { location: "thank_you", files: submitted.files.length });
+    const onWaClick = () => trackEvent("whatsapp_lead_sent", { location: "thank_you", files: submitted.files.length, picks: submitted.picks.length });
     return (
       <div className="bg-[var(--color-cream)] border-2 border-[var(--color-brass)] rounded-2xl p-10 md:p-14 text-center">
         <div className="w-16 h-16 bg-[var(--color-brass)] rounded-full mx-auto mb-6 flex items-center justify-center">
@@ -153,6 +167,22 @@ export function LeadForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 bg-[var(--color-cream)] rounded-2xl p-6 md:p-10 shadow-lg">
+      {pickCount > 0 && (
+        <div className="bg-[var(--color-brass)]/10 border-2 border-[var(--color-brass)]/40 rounded-xl p-5">
+          <p className="text-[var(--color-charcoal)] font-bold text-sm mb-3">הבחירות שלכם מהגלריה ({pickCount}):</p>
+          <div className="flex flex-wrap gap-3">
+            {picks.map((p) => (
+              <div key={p.id} className="relative shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.thumbnailUrl} alt={p.name} className="w-16 h-16 rounded-lg object-cover border border-[var(--color-cream-darker)]" />
+                <button type="button" onClick={() => removePick(p.id)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600" aria-label="הסר">×</button>
+                <p className="text-[var(--color-charcoal)]/60 text-[10px] text-center mt-1 max-w-16 truncate">{p.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid md:grid-cols-2 gap-5">
         <div>
           <label htmlFor="full_name" className="block text-[var(--color-charcoal)] font-medium mb-2 text-sm">שם מלא *</label>
@@ -170,7 +200,7 @@ export function LeadForm() {
       </div>
 
       <div>
-        <label className="block text-[var(--color-charcoal)] font-medium mb-3 text-sm">סוג פרויקט</label>
+        <label className="block text-[var(--color-charcoal)]/70 font-medium mb-3 text-sm">סוג פרויקט (אופציונלי)</label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {PROJECT_TYPES.map((p) => (
             <label key={p.value} className="cursor-pointer">
@@ -182,7 +212,7 @@ export function LeadForm() {
       </div>
 
       <div>
-        <label className="block text-[var(--color-charcoal)] font-medium mb-3 text-sm">תקציב משוער (אופציונלי — עוזר לנו להציע התאמות מדויקות)</label>
+        <label className="block text-[var(--color-charcoal)]/70 font-medium mb-3 text-sm">תקציב משוער (אופציונלי)</label>
         <div className="grid md:grid-cols-2 gap-3">
           {BUDGET_TIERS.map((b) => (
             <label key={b.value} className="cursor-pointer">
