@@ -19,6 +19,27 @@ const PROJECT_TYPES = [
   { value: "commercial", label: "מסחרי" },
 ];
 
+const ICON_WALL = "M4 5h16M6 9h12v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9zM9 17l-1 2M15 17l1 2";
+const ICON_CABINET = "M5 4h14v6H5zM5 10v9M19 10v9M5 19h14M9 13v3M15 13v3";
+const ICON_SIDE = "M3 8h18v3H3zM6 11v8M18 11v8M3 19h18M8 4h8v4H8z";
+const ICON_CORNER = "M4 4v16h16M4 4h8v8h8M8 12v4M12 16h4";
+const ICON_UNSURE = "M12 19a1 1 0 1 0 0 .01M9 9a3 3 0 1 1 4 2.8c-.8.4-1 1-1 1.7v.5";
+
+const MOUNT_TYPES = [
+  { value: "wall_hung", label: "כיור תלוי על קיר", icon: ICON_WALL },
+  { value: "on_cabinet", label: "כיור על ארון", icon: ICON_CABINET },
+  { value: "side_counters", label: "כיור עם משטחי שיש מהצד", icon: ICON_SIDE },
+  { value: "corner", label: "כיור פינתי", icon: ICON_CORNER },
+  { value: "unsure", label: "לא בטוח/ה — נחליט יחד", icon: ICON_UNSURE },
+];
+
+const SIZE_BUCKETS = [
+  { value: "narrow", label: "צר", desc: "מתאים לשירותי אורחים (~40-50 ס\"מ)" },
+  { value: "standard", label: "בינוני", desc: "אמבטיה סטנדרטית (~60-80 ס\"מ)" },
+  { value: "wide", label: "רחב", desc: "אמבטיה גדולה / כיור זוגי (~100-140 ס\"מ)" },
+  { value: "unsure", label: "לא בטוח/ה", desc: "אמדוד יחד עם אלס" },
+];
+
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dqdku88vv";
 const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_LEAD_PRESET || "marble_lead_uploads";
 const BUSINESS_WHATSAPP = "972505231042";
@@ -28,7 +49,7 @@ const ACCEPTED = ".jpg,.jpeg,.png,.webp,.mp4,.mov,.pdf";
 
 type UploadedFile = { name: string; url: string; type: string };
 type PickInfo = { name: string; section: string };
-type SubmittedLead = { full_name: string; phone: string; city_he: string; project_type: string; budget_tier: string; notes_he: string; files: UploadedFile[]; picks: PickInfo[] };
+type SubmittedLead = { full_name: string; phone: string; city_he: string; project_type: string; budget_tier: string; mount_type: string; size_bucket: string; notes_he: string; files: UploadedFile[]; picks: PickInfo[] };
 
 function trackEvent(eventName: string, params: Record<string, string | number>) {
   if (typeof window !== "undefined") {
@@ -37,17 +58,21 @@ function trackEvent(eventName: string, params: Record<string, string | number>) 
   }
 }
 
+function labelFor(list: { value: string; label: string }[], val: string): string {
+  return list.find((x) => x.value === val)?.label || "—";
+}
+
 function buildWhatsAppMessage(lead: SubmittedLead): string {
-  const projectLabel = PROJECT_TYPES.find((p) => p.value === lead.project_type)?.label || "—";
-  const budgetLabel = BUDGET_TIERS.find((b) => b.value === lead.budget_tier)?.label || "—";
   const lines = [
     "שלום, מילאתי טופס באתר מרבל ארט:",
     "",
     `שם: ${lead.full_name}`,
     `טלפון: ${lead.phone}`,
     lead.city_he ? `עיר: ${lead.city_he}` : "",
-    `סוג פרויקט: ${projectLabel}`,
-    `תקציב: ${budgetLabel}`,
+    `סוג פרויקט: ${labelFor(PROJECT_TYPES, lead.project_type)}`,
+    `סוג התקנה: ${labelFor(MOUNT_TYPES, lead.mount_type)}`,
+    `גודל משוער: ${labelFor(SIZE_BUCKETS, lead.size_bucket)}`,
+    `תקציב: ${labelFor(BUDGET_TIERS, lead.budget_tier)}`,
     lead.notes_he ? `הערות: ${lead.notes_he}` : "",
   ];
   if (lead.picks.length > 0) {
@@ -122,10 +147,17 @@ export function LeadForm() {
       return;
     }
     formData.set("phone", phoneCheck.normalized);
+    const mountType = (formData.get("mount_type") as string) || "";
+    const sizeBucket = (formData.get("size_bucket") as string) || "";
     setPending(true);
-    const pickNote = picks.length > 0 ? "\n\nבחירות מהגלריה: " + picks.map((p) => p.name).join(", ") : "";
-    const existingNotes = (formData.get("notes_he") as string) || "";
-    formData.set("notes_he", existingNotes + pickNote);
+    const userNotes = ((formData.get("notes_he") as string) || "").trim();
+    const structured = [
+      mountType ? `סוג התקנה: ${labelFor(MOUNT_TYPES, mountType)}` : "",
+      sizeBucket ? `גודל משוער: ${labelFor(SIZE_BUCKETS, sizeBucket)}` : "",
+      picks.length > 0 ? `בחירות מהגלריה: ${picks.map((p) => p.name).join(", ")}` : "",
+    ].filter((s) => s !== "").join(" | ");
+    const combinedNotes = [userNotes, structured].filter((s) => s !== "").join("\n");
+    formData.set("notes_he", combinedNotes);
     formData.set("inspiration_urls_json", JSON.stringify([...files.map((f) => f.url), ...picks.map((p) => p.thumbnailUrl)]));
     const result = await submitLead(formData);
     setPending(false);
@@ -136,7 +168,9 @@ export function LeadForm() {
         city_he: ((formData.get("city_he") as string) || "").trim(),
         project_type: (formData.get("project_type") as string) || "",
         budget_tier: (formData.get("budget_tier") as string) || "",
-        notes_he: existingNotes.trim(),
+        mount_type: mountType,
+        size_bucket: sizeBucket,
+        notes_he: userNotes,
         files,
         picks: picks.map((p) => ({ name: p.name, section: p.section })),
       });
@@ -212,6 +246,38 @@ export function LeadForm() {
       </div>
 
       <div>
+        <label className="block text-[var(--color-charcoal)] font-medium mb-1 text-sm">איך הכיור מותקן? (אופציונלי)</label>
+        <p className="text-[var(--color-charcoal)]/50 text-xs mb-3">לא בטוחים? בחרו "לא בטוח/ה" ונעבור על זה יחד.</p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {MOUNT_TYPES.map((m) => (
+            <label key={m.value} className="cursor-pointer">
+              <input type="radio" name="mount_type" value={m.value} className="sr-only peer" />
+              <div className="flex flex-col items-center gap-2 px-3 py-4 border-2 border-[var(--color-cream-darker)] rounded-lg bg-white text-center text-xs transition-all peer-checked:border-[var(--color-brass)] peer-checked:bg-[var(--color-brass)]/10 hover:border-[var(--color-brass)]/50">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-brass-dark)]"><path d={m.icon} /></svg>
+                <span className="text-[var(--color-charcoal)] leading-tight">{m.label}</span>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-[var(--color-charcoal)] font-medium mb-1 text-sm">גודל משוער (אופציונלי)</label>
+        <p className="text-[var(--color-charcoal)]/50 text-xs mb-3">אין צורך למדוד בדיוק — בחרו את מה שהכי קרוב. אלס ימדוד במדויק בהמשך.</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {SIZE_BUCKETS.map((s) => (
+            <label key={s.value} className="cursor-pointer">
+              <input type="radio" name="size_bucket" value={s.value} className="sr-only peer" />
+              <div className="px-3 py-3 border-2 border-[var(--color-cream-darker)] rounded-lg bg-white text-center transition-all peer-checked:border-[var(--color-brass)] peer-checked:bg-[var(--color-brass)]/10 hover:border-[var(--color-brass)]/50">
+                <div className="font-bold text-[var(--color-charcoal)] text-sm">{s.label}</div>
+                <div className="text-[var(--color-charcoal)]/55 text-[11px] mt-1 leading-tight">{s.desc}</div>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
         <label className="block text-[var(--color-charcoal)]/70 font-medium mb-3 text-sm">תקציב משוער (אופציונלי)</label>
         <div className="grid md:grid-cols-2 gap-3">
           {BUDGET_TIERS.map((b) => (
@@ -228,12 +294,12 @@ export function LeadForm() {
 
       <div>
         <label htmlFor="notes_he" className="block text-[var(--color-charcoal)] font-medium mb-2 text-sm">הערות (אופציונלי)</label>
-        <textarea id="notes_he" name="notes_he" rows={4} className="w-full px-4 py-3 border border-[var(--color-cream-darker)] rounded-lg bg-white text-[var(--color-charcoal)] focus:border-[var(--color-brass)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brass)]/20 transition-all resize-none" placeholder="סגנון מועדף, אבן מסוימת, לוח זמנים, או כל דבר אחר שתרצו שנדע..." />
+        <textarea id="notes_he" name="notes_he" rows={4} className="w-full px-4 py-3 border border-[var(--color-cream-darker)] rounded-lg bg-white text-[var(--color-charcoal)] focus:border-[var(--color-brass)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brass)]/20 transition-all resize-none" placeholder="תארו במילים שלכם — אל תדאגו לדיוק. לדוגמה: רוחב הקיר בערך 1.20 מטר, יש חלון מימין..." />
       </div>
 
       <div>
         <label className="block text-[var(--color-charcoal)] font-medium mb-2 text-sm">צרפו תמונות / סרטונים / מסמכים (אופציונלי)</label>
-        <p className="text-[var(--color-charcoal)]/50 text-xs mb-3">תמונות השראה, סרטון של החלל, או מסמך מהאדריכל. עד {MAX_FILES} קבצים, {MAX_SIZE_MB} מגה לקובץ.</p>
+        <p className="text-[var(--color-charcoal)]/50 text-xs mb-3">טיפ: צלמו את החלל עם טלפון או כרטיס אשראי לצידו — זה עוזר לנו להעריך מידות. עד {MAX_FILES} קבצים, {MAX_SIZE_MB} מגה לקובץ.</p>
         <label htmlFor="lead_files" className="flex flex-col items-center justify-center w-full py-8 border-2 border-dashed border-[var(--color-cream-darker)] rounded-lg bg-white cursor-pointer hover:border-[var(--color-brass)]/50 transition-all">
           <span className="text-[var(--color-brass-dark)] text-3xl mb-2">↑</span>
           <span className="text-[var(--color-charcoal)]/70 text-sm">{uploading ? "מעלה קבצים..." : "לחצו לבחירת קבצים או גררו לכאן"}</span>
