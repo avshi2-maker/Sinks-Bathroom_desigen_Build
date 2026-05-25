@@ -20,11 +20,15 @@ export const metadata: Metadata = {
     template: "%s | Marble Art Sinks",
   },
   description:
-    "כיורי שיש איטלקי בעבודת יד מאלס. שיש Calacatta, Statuario ומדגסקר. גימור ידני, תצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
+    "כיורי שיש איטלקי בעבודת יד בהזמנה אישית — למעצבי פנים, אדריכלים ובתים פרטיים. שיש Calacatta, Statuario ומדגסקר, גימור ידני ותצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
   keywords: [
     "כיורי שיש",
     "כיור שיש איטלקי",
     "כיור שיש בעבודת יד",
+    "כיור שיש בהזמנה אישית",
+    "כיורי שיש למעצבי פנים",
+    "כיורי שיש לאדריכלים",
+    "כיור אמבטיה ייחודי",
     "כיור אמבטיה יוקרתי",
     "שיש מדגסקר",
     "כיור אומנותי",
@@ -44,6 +48,8 @@ export const metadata: Metadata = {
     "marble sink",
     "italian marble bathroom",
     "custom marble sink Israel",
+    "marble sinks for interior designers",
+    "marble sinks for architects",
     "artisan stone sink",
     "artistic handmade marble sink",
     "white marble sink",
@@ -71,7 +77,7 @@ export const metadata: Metadata = {
     siteName: "Marble Art Sinks",
     title: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד | מרבל ארט",
     description:
-      "כיורי שיש איטלקי בעבודת יד מאלס. שיש Calacatta, Statuario ומדגסקר. גימור ידני, תצוגה מקדימה ב-AI לפני שחותכים את האבן. מבית מרבל ארט.",
+      "כיורי שיש איטלקי בעבודת יד בהזמנה אישית — למעצבי פנים, אדריכלים ובתים פרטיים. גימור ידני ותצוגה מקדימה ב-AI לפני שחותכים את האבן.",
     images: [
       {
         url: "/og-image.jpg",
@@ -86,7 +92,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Marble Art Sinks — כיורי שיש איטלקי בעבודת יד",
     description:
-      "כיורי שיש איטלקי בעבודת יד מאלס. תצוגה מקדימה ב-AI לפני שחותכים את האבן.",
+      "כיורי שיש איטלקי בעבודת יד בהזמנה אישית — למעצבי פנים, אדריכלים ובתים פרטיים.",
     images: ["/og-image.jpg"],
   },
   alternates: {
@@ -114,7 +120,7 @@ export default function RootLayout({
     name: "Marble Art Sinks",
     alternateName: "מרבל ארט",
     description:
-      "כיורי שיש איטלקי בעבודת יד. שיש Calacatta, Statuario ומדגסקר. גימור ידני אומנותי. שיפוץ מקלחות ואמבטיות מותאם אישית.",
+      "כיורי שיש איטלקי בעבודת יד בהזמנה אישית, בשיתוף פעולה עם מעצבי פנים ואדריכלים. שיש Calacatta, Statuario ומדגסקר, גימור ידני אומנותי. שיפוץ מקלחות ואמבטיות מותאם אישית.",
     url: SITE_URL,
     image: `${SITE_URL}/og-image.jpg`,
     priceRange: "₪₪₪",
@@ -135,6 +141,15 @@ export default function RootLayout({
           name: "Artistic handmade marble sinks",
           description:
             "Custom-designed marble sinks crafted from Italian Calacatta, Statuario, and Madagascar agate.",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Trade collaboration for interior designers and architects",
+          description:
+            "Bespoke marble sinks built to exact specification for interior designers and architects, with origin certificates and AI previews to present to their clients.",
         },
       },
       {
