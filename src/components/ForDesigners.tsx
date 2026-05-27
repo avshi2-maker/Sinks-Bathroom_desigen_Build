@@ -11,8 +11,8 @@
   },
   {
     badge: "03",
-    title: "תעודת מקור לכל אבן",
-    text: "שיש איטלקי מובחר עם תיעוד מקור מלא — חומר שתוכלו להציג בגאווה בפני הלקוחות שלכם.",
+    title: "תיעוד מלא לכל חומר",
+    text: "שיש איטלקי, גרניט פורצלן ואריחים מדוקקים מובחרים — עם תיעוד מלא לכל חומר, שתוכלו להציג בגאווה בפני הלקוחות שלכם.",
   },
   {
     badge: "04",
@@ -43,7 +43,8 @@ export function ForDesigners() {
 
         <div className="text-center">
           <a href="#lead-form" className="inline-block bg-[var(--color-brass)] text-[var(--color-charcoal)] font-bold text-lg px-10 py-4 rounded-sm hover:bg-[var(--color-cream)] transition-colors">בואו נשתף פעולה</a>
-          <p className="text-[var(--color-cream)]/50 text-sm mt-5">מעדיפים לדבר ישירות? <a href="https://wa.me/972505231042" className="text-[var(--color-brass)] underline hover:text-[var(--color-cream)]">וואטסאפ לאבשי</a></p>
+          <p className="text-[var(--color-cream)]/60 text-base mt-6"><a href="/marble-sinks-for-designers" className="text-[var(--color-brass)] underline hover:text-[var(--color-cream)] font-medium">קראו עוד למעצבים ולאדריכלים ←</a></p>
+          <p className="text-[var(--color-cream)]/50 text-sm mt-4">מעדיפים לדבר ישירות? <a href="https://wa.me/972505231042" className="text-[var(--color-brass)] underline hover:text-[var(--color-cream)]">וואטסאפ לאבשי</a></p>
         </div>
       </div>
     </section>

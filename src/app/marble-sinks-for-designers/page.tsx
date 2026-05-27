@@ -111,6 +111,7 @@ export default function DesignersPage() {
         <section className="relative py-24 md:py-32 bg-[var(--color-charcoal)] overflow-hidden">
           <div className="absolute inset-0 z-0" style={{ background: "radial-gradient(ellipse at 30% 30%, #B89968 0%, #5a3a1a 25%, #1a1612 60%, #0F0F0F 100%)" }} aria-hidden="true" />
           <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <div className="text-right mb-8"><a href="/" className="text-[var(--color-cream)]/70 text-sm hover:text-[var(--color-brass)] transition-colors">→ חזרה לעמוד הבית</a></div>
             <p className={eyebrowDark}>למעצבי פנים ואדריכלים</p>
             <h1 className="text-[var(--color-cream)] text-4xl md:text-6xl font-black leading-[1.1] mb-6">כיורי שיש בהזמנה אישית — שותף הייצור שלכם</h1>
             <p className="text-[var(--color-cream)]/80 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">אתם מעצבים את החזון. אנחנו הופכים אותו לרהיט. כיורים בעבודת יד, מיוצרים בדיוק לפי המפרט והחומרים שבחרתם — עבור הלקוחות הפרטיים, הפרויקטים והוילות שאתם מתכננים.</p>
@@ -172,6 +173,7 @@ export default function DesignersPage() {
             <p className="text-[var(--color-cream)]/70 text-lg leading-relaxed mb-10">שלחו לנו את המפרט או את החזון, ונחזור אליכם עם הדמיה והצעה. שיתוף פעולה דיסקרטי, באיכות אומנותית, בלוח זמנים שתוכלו לסמוך עליו.</p>
             <a href="/#lead-form" className={ctaButton}>בואו נשתף פעולה</a>
             <p className="text-[var(--color-cream)]/50 text-sm mt-6">מעדיפים לדבר ישירות? <a href="https://wa.me/972505231042" className="text-[var(--color-brass)] underline hover:text-[var(--color-cream)]">וואטסאפ לאבשי</a></p>
+            <p className="mt-10"><a href="/" className="text-[var(--color-cream)]/70 text-base hover:text-[var(--color-brass)] transition-colors">→ חזרה לעמוד הבית</a></p>
           </div>
         </section>
       </main>
