@@ -1,10 +1,11 @@
 ﻿import { fetchGalleryFolder } from "@/lib/cloudinaryGallery";
 import type { GalleryImage } from "@/lib/cloudinaryGallery";
 import { GalleryCard } from "./GalleryCard";
+import { VideoGallery } from "./VideoGallery";
 
 /**
- * Marble Art Gallery — renders 4 themed sections.
- * All 4 sections are pickable (customer can add any item to selection cart).
+ * Marble Art Gallery — 4 themed sections. VideoGallery renders right
+ * after the "כיורים שבנינו" section.
  */
 export async function Gallery() {
   const [sinks, samples, concepts, sketches] = await Promise.all([
@@ -27,6 +28,8 @@ export async function Gallery() {
         pickable
         emptyState="גלריית הכיורים נפתחת בקרוב — נוסיף תמונות חדשות בכל שבוע."
       />
+
+      <VideoGallery />
 
       <GallerySection
         id="samples-gallery"
@@ -120,4 +123,3 @@ function GallerySection({ id, eyebrow, title, subtitle, items, columns, bgClass,
     </section>
   );
 }
-
