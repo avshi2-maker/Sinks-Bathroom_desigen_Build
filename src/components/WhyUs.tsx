@@ -1,17 +1,27 @@
-﻿const reasons = [
+const reasons = [
   {
     badge: "01",
-    title: "שיש איטלקי מובחר",
-    text: "Calacatta, Statuario, Saint Laurent, ועוד אבנים אקזוטיות מקרארה ועד מדגסקר. כל לוח נבחר ידנית עם תעודת מקור.",
+    title: "שיש איטלקי וגרניט פורצלן",
+    text: "Calacatta, Statuario, Saint Laurent, גרניט פורצלן בעובי 8 מ״מ ואבנים אקזוטיות. כל לוח נבחר ידנית עם תעודת מקור.",
   },
   {
     badge: "02",
     title: "עבודת יד אומנותית",
-    text: "אלס, אומן השיש שלנו, חותך, מלטש ומרכיב כל כיור באופן ידני בסדנה בישראל. אין שני כיורים זהים.",
+    text: "אלס ורוסלן, אומני החיתוך והבנייה שלנו, חותכים, מלטשים ומרכיבים כל כיור באופן ידני בסדנה בישראל. אין שני כיורים זהים.",
   },
   {
     badge: "03",
-    title: "תצוגה מקדימה ב-AI",
+    title: "ללא מגבלות אורך",
+    text: "כיור באורך 1.20 עד 2.40 מ׳ ללא חיבורים — או כל גודל נדרש עם חיבורים סמויים, כמעט בלתי נראים.",
+  },
+  {
+    badge: "04",
+    title: "כיור תלוי — ללא שידה",
+    text: "התקנה תלויה על הקיר, ללא ארון תחתון — מראה מרחף, נקי ומודרני, שמשחרר את רצפת חדר הרחצה.",
+  },
+  {
+    badge: "05",
+    title: "הדמיית AI לפני ייצור",
     text: "לפני שחותכים אבן יקרה, אפשרות להציג הדמייה הכוללת את הפרטים ששלחתם בטופס.",
   },
 ];
@@ -25,11 +35,11 @@ export function WhyUs() {
             למה אנחנו
           </p>
           <h2 className="text-[var(--color-charcoal)] text-3xl md:text-5xl font-black max-w-2xl mx-auto leading-tight">
-            שלושה דברים שמייחדים אותנו
+            היתרונות שמייחדים אותנו
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-10 md:gap-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
           {reasons.map((r) => (
             <div key={r.badge} className="text-right">
               <div className="text-[var(--color-brass)] text-5xl font-black mb-6 leading-none">
@@ -48,4 +58,3 @@ export function WhyUs() {
     </section>
   );
 }
-
