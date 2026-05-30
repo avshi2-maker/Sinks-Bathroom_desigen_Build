@@ -1,4 +1,4 @@
-﻿import { fetchVideoFolder } from "@/lib/cloudinaryVideo";
+import { fetchVideoFolder } from "@/lib/cloudinaryVideo";
 
 /**
  * Video gallery section — MP4s from Cloudinary "marble-art/videos" with
@@ -6,7 +6,7 @@
  * To add a video later: just upload it to marble-art/videos. No code change.
  */
 export async function VideoGallery() {
-  const videos = await fetchVideoFolder("marble-art/videos", 12);
+  const videos = await fetchVideoFolder("marble-art/videos", 50);
 
   if (videos.length === 0) {
     return null;
