@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { submitLead } from "@/app/actions";
@@ -36,8 +36,8 @@ const MOUNT_TYPES = [
 const SIZE_BUCKETS = [
   { value: "narrow", label: "צר", desc: "מתאים לשירותי אורחים (~40-50 ס\"מ)" },
   { value: "standard", label: "בינוני", desc: "אמבטיה סטנדרטית (~60-80 ס\"מ)" },
-  { value: "wide", label: "רחב", desc: "אמבטיה גדולה / כיור זוגי (~100-140 ס\"מ)" },
-  { value: "unsure", label: "לא בטוח/ה", desc: "אמדוד יחד עם אלס" },
+  { value: "wide", label: "רחב", desc: "אמבטיה גדולה / כיור זוגי (120-240 ס\"מ)" },
+  { value: "unsure", label: "לא בטוח/ה", desc: "אמדוד עם נציג שלכם" },
 ];
 
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dqdku88vv";
@@ -194,7 +194,7 @@ export function LeadForm() {
         <h3 className="text-[var(--color-charcoal)] text-3xl font-black mb-4">תודה רבה!</h3>
         <p className="text-[var(--color-charcoal)]/70 text-lg max-w-md mx-auto leading-relaxed mb-8">קיבלנו את הפרטים. כדי שנחזור אליכם מהר יותר — שלחו לנו את הפרטים גם בוואטסאפ בלחיצה אחת:</p>
         <a href={waHref} target="_blank" rel="noopener noreferrer" onClick={onWaClick} className="inline-block bg-[#25D366] text-white py-4 px-8 rounded-full font-bold text-lg hover:bg-[#1da851] transition-colors duration-300">שלחו לנו את הפרטים בוואטסאפ ←</a>
-        <p className="text-[var(--color-charcoal)]/50 text-sm mt-6">או שאלס יחזור אליכם תוך 24-48 שעות.</p>
+        <p className="text-[var(--color-charcoal)]/50 text-sm mt-6">או שנציג יחזור אליכם תוך 24-48 שעות.</p>
       </div>
     );
   }
@@ -322,7 +322,7 @@ export function LeadForm() {
 
       <button type="submit" disabled={pending || uploading} className="w-full bg-[var(--color-charcoal)] text-[var(--color-cream)] py-5 rounded-full font-bold text-lg hover:bg-[var(--color-brass)] hover:text-[var(--color-charcoal)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300">{pending ? "שולח..." : "שלחו אלינו פרטים ←"}</button>
 
-      <p className="text-center text-[var(--color-charcoal)]/50 text-xs">לא נשלח ספאם. אלס יחזור אליכם תוך 24-48 שעות בוואטסאפ.</p>
+      <p className="text-center text-[var(--color-charcoal)]/50 text-xs">לא נשלח ספאם. נציג יחזור אליכם תוך 24-48 שעות בוואטסאפ.</p>
     </form>
   );
 }

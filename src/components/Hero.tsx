@@ -15,7 +15,7 @@ export function Hero() {
         <div className="max-w-2xl animate-fade-up">
           <p className="text-[var(--color-brass)] text-xs md:text-sm font-medium tracking-[0.3em] uppercase mb-6">כיורי גרניט פורצלן איטלקי, ספרדי יוקרתי בעבודת יד</p>
           <h1 className="text-[var(--color-cream)] text-4xl md:text-6xl lg:text-7xl font-black leading-[1.05] mb-8">אל תסתפקו בשיפוץ.<br /><span className="text-[var(--color-brass)]">צרו יצירת מופת.</span></h1>
-          <p className="text-[var(--color-cream)]/85 text-lg md:text-xl leading-relaxed max-w-xl">כל כיור הוא יצירה בודדת. גרניט פורצלן בעובי 8 מ״מ, חיתוך מדויק, גימור ידני יוקרתי. תצוגה מקדימה של הכיור שלכם — לפני שחתכנו אבן אחת.</p>
+          <p className="text-[var(--color-cream)]/85 text-lg md:text-xl leading-relaxed max-w-xl">כל כיור הוא יצירה בודדת. גרניט פורצלן, שיש ומדוקקים בעובי 8-12-18 מ״מ, חיתוך מדויק, גימור ידני יוקרתי. תצוגה מקדימה של הכיור שלכם — לפני שחתכנו אבן אחת.</p>
         </div>
       </div>
     </section>
